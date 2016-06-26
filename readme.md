@@ -36,6 +36,21 @@ pom添加添加plugin
     └── lib         # 工程依赖包目录
 ```
 
+## 启动说明 ##
+以shell脚本为例：
+
+- `./bin/run.sh basic`
+加载所有扫描到的爬虫规则类，并触发名为`basic`的爬虫规则开始抓取。
+
+- `./bin/run.sh 8000 basic`
+加载所有扫描到的爬虫规则类，并触发名为`basic`的爬虫规则开始抓取,同时在`8000`端口启动一个http服务接受通过制定http接口（参考SeimiCrawler文档）添加抓取请求，查询抓取状态等。
+
+- `./bin/run.sh`
+加载所有扫描到的爬虫规则类，并全都都处于监听任务状态。就是`startAllWorkers()`。
+
+- `./bin/run.sh 8000`
+加载所有扫描到的爬虫规则类，并全都都处于监听任务状态。就是`startAllWorkers()`。于此同时在`8000`端口启动一个http服务接受通过制定http接口（参考SeimiCrawler文档）添加抓取请求，查询抓取状态等。
+
 # SeimiCrawler项目 #
 SeimiCrawler是一个敏捷的，独立部署的，支持分布式的Java爬虫框架，希望能在最大程度上降低新手开发一个可用性高且性能不差的爬虫系统的门槛，以及提升开发爬虫系统的开发效率。在SeimiCrawler的世界里，绝大多数人只需关心去写抓取的业务逻辑就够了，其余的Seimi帮你搞定。设计思想上SeimiCrawler受Python的爬虫框架Scrapy启发很大，同时融合了Java语言本身特点与Spring的特性，并希望在国内更方便且普遍的使用更有效率的XPath解析HTML，所以SeimiCrawler默认的HTML解析器是[JsoupXpath](http://jsoupxpath.wanghaomiao.cn)(独立扩展项目，非jsoup自带),默认解析提取HTML数据工作均使用XPath来完成（当然，数据处理亦可以自行选择其他解析器）。
 
