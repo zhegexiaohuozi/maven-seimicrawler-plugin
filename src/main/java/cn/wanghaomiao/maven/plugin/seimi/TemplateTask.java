@@ -9,6 +9,7 @@ import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +45,10 @@ public class TemplateTask {
             batBinFile.close();
 
             Template templateSh = cfg.getTemplate("run.sh.ftl");
-            Writer shBinFile = new FileWriter(new File(bin, "run.sh"));
-            templateSh.process(ctx, shBinFile);
+            StringWriter stringWriter = new StringWriter();
+            FileWriter shBinFile = new FileWriter(new File(bin, "run.sh"));
+            templateSh.process(ctx, stringWriter);
+            shBinFile.write(stringWriter.toString().replaceAll("\r",""));
             shBinFile.flush();
             shBinFile.close();
 
