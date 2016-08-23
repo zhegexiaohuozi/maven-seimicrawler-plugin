@@ -163,7 +163,7 @@ public class SeimiMojo extends AbstractWarMojo {
         buildExplodedWebapp(getWebappDirectory());
 
         TemplateTask templateTask = new TemplateTask(getWebappDirectory(),getLog());
-        templateTask.genBinFile();
+        templateTask.createBinFile();
 
         MavenArchiver archiver = new MavenArchiver();
 

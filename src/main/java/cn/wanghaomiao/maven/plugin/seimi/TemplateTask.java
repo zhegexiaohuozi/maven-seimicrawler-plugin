@@ -33,18 +33,17 @@ public class TemplateTask {
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     }
 
-    public void genBinFile() {
+    public void createBinFile() {
         try {
             File bin = new File(outDir, "bin");
             bin.mkdir();
             Map<String, Object> ctx = new HashMap<String, Object>();
-            Template templateBat = cfg.getTemplate("run.bat.ftl");
-            Writer batBinFile = new FileWriter(new File(bin, "run.bat"));
-            templateBat.process(ctx, batBinFile);
-            batBinFile.flush();
-            batBinFile.close();
 
-            Template templateSh = cfg.getTemplate("run.sh.ftl");
+            createFile(ctx,bin,"seimi.vmoptions");
+            createFile(ctx,bin,"seimi.cfg");
+            createFile(ctx,bin,"run.bat");
+
+            Template templateSh = cfg.getTemplate("run.sh");
             StringWriter stringWriter = new StringWriter();
             FileWriter shBinFile = new FileWriter(new File(bin, "run.sh"));
             templateSh.process(ctx, stringWriter);
@@ -54,6 +53,18 @@ public class TemplateTask {
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        }
+    }
+
+    public void createFile(Map<String,Object> ctx,File dir,String fileName){
+        try {
+            Template templateBat = cfg.getTemplate(fileName);
+            Writer binFile = new FileWriter(new File(dir, fileName));
+            templateBat.process(ctx, binFile);
+            binFile.flush();
+            binFile.close();
+        }catch (Exception e){
+            log.error(e.getMessage(),e);
         }
     }
 }
