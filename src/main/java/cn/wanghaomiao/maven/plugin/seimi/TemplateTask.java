@@ -2,6 +2,7 @@ package cn.wanghaomiao.maven.plugin.seimi;
 
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
@@ -36,9 +37,11 @@ public class TemplateTask {
 
     public void createFile(File dir, String fileName) {
         try {
-            URL resourc = this.getClass().getClassLoader().getResource("template/" + fileName);
-            assert resourc != null;
-            FileUtils.copyURLToFile(resourc, new File(dir, fileName));
+            URL resource = this.getClass().getClassLoader().getResource("template/" + fileName);
+            assert resource != null;
+            String content = IOUtils.toString(resource.openStream());
+            content = content.replaceAll("\r","");
+            FileUtils.writeStringToFile(new File(dir, fileName),content);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
