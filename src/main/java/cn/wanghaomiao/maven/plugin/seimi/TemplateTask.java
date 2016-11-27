@@ -25,7 +25,6 @@ public class TemplateTask {
         try {
             File bin = new File(outDir, "bin");
             bin.mkdir();
-            createFile(bin, "seimi.vmoptions");
             createFile(bin, "seimi.cfg");
             createFile(bin, "run.bat");
             createFile(bin, "run.sh");
