@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+SEIMI_HOME=$(cd `dirname $0`; cd ..; pwd)
 #https://github.com/rudimeier/bash_ini_parser
 function read_ini()
 {
@@ -243,14 +244,13 @@ function start(){
     if [ ! -x "$JAVA_CMD" ]; then
         echo "Can not find JAVA_HOME in sys env."
     fi
-    SEIMI_HOME=$(cd `dirname $0`; cd ..; pwd)
     SEIMI_CLASS_PATH=".:$SEIMI_HOME/seimi/classes/:$SEIMI_HOME/seimi/lib/*"
     SEIMI_SYS_ARGS="-Dfile.encoding=UTF-8"
     # e.g. SEIMI_CRAWLER_ARGS="-c basic -p 8080" 这里指定要启动的Crawler的name，若第一个参数为数字则认为是启动该端口号的内置http服务接受http接口发送过来的Request
     SEIMI_CRAWLER_ARGS="$(read_ini $SEIMI_HOME/bin/seimi.cfg init_cfg params)"
     SEIMI_STDOUT=($(read_ini $SEIMI_HOME/bin/seimi.cfg linux stdout))
     echo "cc:" $SEIMI_HOME "$SEIMI_CRAWLER_ARGS" $SEIMI_STDOUT
-    nohup $JAVA_CMD -cp $SEIMI_CLASS_PATH $SEIMI_SYS_ARGS cn.wanghaomiao.seimi.boot.Run $SEIMI_CRAWLER_ARGS >$SEIMI_STDOUT &
+    nohup $JAVA_CMD -cp $SEIMI_CLASS_PATH $SEIMI_SYS_ARGS cn.wanghaomiao.seimi.boot.Run $SEIMI_CRAWLER_ARGS >$SEIMI_STDOUT 2>&1 &
     PID=`echo $!`
     if [ -d "/proc/$PID" ]; then
         echo $!>"$SEIMI_HOME/.seimicrawler.lock.pid"
@@ -260,10 +260,37 @@ function start(){
     fi
     exit 0
 }
+
+function stop(){
+	if [ -f "$SEIMI_HOME/.seimicrawler.lock.pid" ]; then
+		echo "SeimiCrawler pid file is ok."
+	else
+		echo "No SeimiCrawler instance is alive,home dir: $SEIMI_HOME"
+		exit 0
+	fi
+	pid=$(cat $SEIMI_HOME/.seimicrawler.lock.pid)
+	if [ ! -d "/proc/$pid" ]; then
+		echo "No SeimiCrawler instance is running,pid:$pid"
+		rm "$SEIMI_HOME/.seimicrawler.lock.pid"
+		exit 0
+	else
+		kill $pid
+		if [ $? -eq 0 ]; then
+			echo "Stop current SeimiCrawler instance,pid:$pid"
+			rm "$SEIMI_HOME/.seimicrawler.lock.pid"
+			exit 0
+		else
+			echo "Stop current SeimiCrawler instance failed,pid:$pid"
+		fi
+	fi
+	rm "$SEIMI_HOME/.seimicrawler.lock.pid"
+	exit 0
+}
 for arg ;do
     case "$arg" in
         help) usage ;;
         start) start;;
+        stop) stop;;
 esac
 done
 
