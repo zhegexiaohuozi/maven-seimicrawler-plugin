@@ -249,7 +249,6 @@ function start(){
     # e.g. SEIMI_CRAWLER_ARGS="-c basic -p 8080" 这里指定要启动的Crawler的name，若第一个参数为数字则认为是启动该端口号的内置http服务接受http接口发送过来的Request
     SEIMI_CRAWLER_ARGS="$(read_ini $SEIMI_HOME/bin/seimi.cfg init_cfg params)"
     SEIMI_STDOUT=($(read_ini $SEIMI_HOME/bin/seimi.cfg linux stdout))
-    echo "cc:" $SEIMI_HOME "$SEIMI_CRAWLER_ARGS" $SEIMI_STDOUT
     nohup $JAVA_CMD -cp $SEIMI_CLASS_PATH $SEIMI_SYS_ARGS cn.wanghaomiao.seimi.boot.Run $SEIMI_CRAWLER_ARGS >$SEIMI_STDOUT 2>&1 &
     PID=`echo $!`
     if [ -d "/proc/$PID" ]; then
