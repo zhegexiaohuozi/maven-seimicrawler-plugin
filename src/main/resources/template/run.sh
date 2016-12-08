@@ -290,7 +290,7 @@ for arg ;do
         help) usage ;;
         start) start;;
         stop) stop;;
-esac
+    esac
 done
 
 usage
