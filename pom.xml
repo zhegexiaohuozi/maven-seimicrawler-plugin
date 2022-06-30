@@ -99,7 +99,7 @@ Apache License Version2.0
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <version>2.9</version>
+      <version>3.6.0</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
